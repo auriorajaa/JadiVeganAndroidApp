@@ -1,0 +1,95 @@
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    app:cardCornerRadius="8dp"
+    app:cardElevation="0dp"
+    android:layout_margin="8dp"
+    android:background="@color/new_white">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:background="@color/new_white">
+
+        <!-- Gambar Recipe -->
+        <com.makeramen.roundedimageview.RoundedImageView
+            android:id="@+id/view_all_img"
+            android:layout_width="85dp"
+            android:layout_height="85dp"
+            app:riv_corner_radius="8dp"
+            android:scaleType="centerCrop"
+            android:layout_margin="4dp"
+            android:src="@mipmap/ic_launcher"
+            android:layout_marginRight="10dp"/>
+
+        <!-- Container Vertikal untuk Teks -->
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:gravity="start"
+            android:layout_margin="8dp">
+
+            <!-- Horizontal Container untuk Category dan Servings -->
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginBottom="4dp">
+
+                <!-- Teks Category -->
+                <TextView
+                    android:id="@+id/view_all_category"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Breakfast"
+                    android:fontFamily="@font/poppinslight"
+                    android:textColor="@color/black"
+                    android:textSize="12sp"/>
+
+                <!-- Separator -->
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text=" - "
+                    android:fontFamily="@font/poppinslight"
+                    android:textColor="@color/black"
+                    android:textSize="12sp"/>
+
+                <!-- Teks Servings -->
+                <TextView
+                    android:id="@+id/view_all_servings"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="2 Servings"
+                    android:fontFamily="@font/poppinslight"
+                    android:textColor="@color/black"
+                    android:textSize="12sp"/>
+            </LinearLayout>
+
+            <!-- Recipe Title -->
+            <TextView
+                android:id="@+id/view_all_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Recipe Title"
+                android:fontFamily="@font/poppinsbold"
+                android:textColor="@color/black"
+                android:textSize="16sp"
+                android:maxLines="2"
+                android:ellipsize="end"/>
+
+            <TextView
+                android:id="@+id/UID"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="UID"
+                android:fontFamily="@font/poppinslight"
+                android:textColor="@color/black"
+                android:visibility="gone"/>
+        </LinearLayout>
+    </LinearLayout>
+</androidx.cardview.widget.CardView>

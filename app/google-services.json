@@ -1,0 +1,30 @@
+{
+  "project_info": {
+    "project_number": "921107144471",
+    "firebase_url": "https://cloud-jadivegan-default-rtdb.asia-southeast1.firebasedatabase.app",
+    "project_id": "cloud-jadivegan",
+    "storage_bucket": "cloud-jadivegan.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:921107144471:android:c13fada5cfd5c9ddd12152",
+        "android_client_info": {
+          "package_name": "com.example.jadiveganapp"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCtLq25pQmtW4u5MEc_IL6aH-F-VQAvXu8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
