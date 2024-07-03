@@ -1,0 +1,112 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/back04"
+    tools:context=".ProfileEditActivity">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/container_title">
+
+        <!-- Tombol Back -->
+        <ImageButton
+            android:id="@+id/btn_back"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:src="@drawable/ic_back_black"
+            android:background="@android:color/transparent"
+            android:layout_marginTop="12dp"
+            android:onClick="onBackButtonClick" />
+
+        <TextView
+            android:id="@+id/edit_profile_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Edit Profile"
+            android:textSize="24sp"
+            android:layout_centerInParent="true"
+            android:layout_below="@id/btn_back"
+            android:fontFamily="@font/poppinsbold"
+            android:textColor="@color/black"
+            android:layout_marginBottom="8dp" />
+
+    </RelativeLayout>
+
+    <!-- FrameLayout for Profile Picture and Edit Icon -->
+    <FrameLayout
+        android:layout_below="@id/container_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="22dp"
+        android:layout_centerHorizontal="true">
+
+        <!-- Gambar Profil -->
+        <com.makeramen.roundedimageview.RoundedImageView
+            android:id="@+id/editProfilePicture"
+            android:layout_width="85dp"
+            android:layout_height="85dp"
+            app:riv_corner_radius="8dp"
+            android:src="@drawable/user"
+            android:scaleType="centerCrop" />
+
+        <!-- Ikon Pensil -->
+        <ImageView
+            android:id="@+id/editProfileIcon"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:src="@drawable/ic_edit_square"
+            android:layout_gravity="top|right"
+            android:layout_marginBottom="4dp"
+            android:background="@color/new_white"/>
+    </FrameLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginTop="255dp">
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/nameTil"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:hintEnabled="false">
+
+            <EditText
+                android:id="@+id/nameEt"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/shape_edit_text01"
+                android:drawableStart="@drawable/ic_person"
+                android:drawablePadding="10dp"
+                android:hint="Name"
+                android:inputType="textPersonName|textCapWords"
+                android:padding="10dp"
+                android:textColor="@color/black"
+                android:textColorHint="@color/gray"
+                android:fontFamily="@font/poppinsregular" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <Button
+            android:id="@+id/updateBtn"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="110dp"
+            android:background="@drawable/shape_button01"
+            android:text="Update"
+            android:textColor="@color/white"
+            android:fontFamily="@font/poppinsbold"
+            android:textSize="16sp"
+            android:elevation="0dp"
+            android:outlineProvider="none" />
+
+    </RelativeLayout>
+
+</RelativeLayout>
