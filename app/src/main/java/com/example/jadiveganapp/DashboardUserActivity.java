@@ -187,11 +187,6 @@ public class DashboardUserActivity extends AppCompatActivity {
                 overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
                 finish();
                 return true;
-            } else if (itemId == R.id.bottom_saved) {
-                startActivity(new Intent(getApplicationContext(), SavedActivity.class));
-                overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
-                finish();
-                return true;
             } else if (itemId == R.id.bottom_profile) {
                 startActivity(new Intent(getApplicationContext(), ProfileActivity.class));
                 overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);

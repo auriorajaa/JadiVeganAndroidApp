@@ -9,10 +9,6 @@
         android:icon="@drawable/ic_search"
         android:title="Search" />
     <item
-        android:id="@+id/bottom_saved"
-        android:icon="@drawable/ic_bookmark"
-        android:title="Saved" />
-    <item
         android:id="@+id/bottom_profile"
         android:icon="@drawable/ic_person_outline"
         android:title="Profile" />

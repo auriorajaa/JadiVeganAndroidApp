@@ -23,7 +23,6 @@ import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
-import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
@@ -56,6 +55,7 @@ public class ProfileEditActivity extends AppCompatActivity {
     private ProgressDialog progressDialog;
 
     private Uri imageUri;
+    private boolean isFirstImageChange = true; // Flag to handle initial image change
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -87,18 +87,25 @@ public class ProfileEditActivity extends AppCompatActivity {
 
     private void loadUserInfo() {
         DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Users");
-        reference.child(firebaseAuth.getUid()).addValueEventListener(new ValueEventListener() {
+        reference.child(firebaseAuth.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 String name = "" + snapshot.child("name").getValue();
                 String profileImage = "" + snapshot.child("profileImage").getValue();
                 binding.nameEt.setText(name);
-                if (!isFinishing() && !isDestroyed()) {
+
+                // Check if profileImage is not empty before loading
+                if (!TextUtils.isEmpty(profileImage)) {
                     Glide.with(ProfileEditActivity.this)
                             .load(profileImage)
                             .placeholder(R.drawable.user)
                             .into(binding.editProfilePicture);
+                } else {
+                    // If profileImage is empty, load default placeholder
+                    binding.editProfilePicture.setImageResource(R.drawable.user);
                 }
+
+                isFirstImageChange = false; // Update flag after first image change
             }
 
             @Override
@@ -107,6 +114,7 @@ public class ProfileEditActivity extends AppCompatActivity {
             }
         });
     }
+
 
     private void validateData() {
         String name = binding.nameEt.getText().toString().trim();
