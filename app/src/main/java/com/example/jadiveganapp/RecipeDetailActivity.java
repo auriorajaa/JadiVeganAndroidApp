@@ -5,8 +5,6 @@ import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -34,15 +32,14 @@ import java.util.HashMap;
 
 public class RecipeDetailActivity extends AppCompatActivity {
 
-    private ImageView recipeImageView, favoriteBtn;
+    private ActivityRecipeDetailBinding binding;
     private TextView recipeTitleTextView, recipeCategoryTextView, recipeServingsTextView, recipeIngredients, recipeInstructions, recipeTips, addCommentBtn;
     private String recipeUid;
     private FirebaseAuth firebaseAuth;
     private boolean isFavorite;
     private ProgressDialog progressDialog;
-    private ActivityRecipeDetailBinding binding;
 
-    // Arraylist to hold comment
+    // ArrayList to hold comments
     private ArrayList<CommentModel> commentModelArrayList;
 
     // Comment adapter
@@ -53,8 +50,6 @@ public class RecipeDetailActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         binding = ActivityRecipeDetailBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
-
-        addCommentBtn = findViewById(R.id.addCommentBtn);
 
         // Initialize Firebase Auth
         firebaseAuth = FirebaseAuth.getInstance();
@@ -68,14 +63,13 @@ public class RecipeDetailActivity extends AppCompatActivity {
         recipeUid = getIntent().getStringExtra("recipeUid");
 
         // Initialize views
-        recipeImageView = findViewById(R.id.recipe_image);
-        favoriteBtn = findViewById(R.id.favoriteBtn);
-        recipeTitleTextView = findViewById(R.id.recipe_title);
-        recipeCategoryTextView = findViewById(R.id.recipe_category);
-        recipeServingsTextView = findViewById(R.id.recipe_servings);
-        recipeIngredients = findViewById(R.id.recipe_ingredient);
-        recipeInstructions = findViewById(R.id.recipe_instructions);
-        recipeTips = findViewById(R.id.recipe_tips);
+        recipeTitleTextView = binding.recipeTitle;
+        recipeCategoryTextView = binding.recipeCategory;
+        recipeServingsTextView = binding.recipeServings;
+        recipeIngredients = binding.recipeIngredient;
+        recipeInstructions = binding.recipeInstructions;
+        recipeTips = binding.recipeTips;
+        addCommentBtn = binding.addCommentBtn;
 
         if (recipeUid == null) {
             Toast.makeText(this, "Recipe UID is missing", Toast.LENGTH_SHORT).show();
@@ -98,7 +92,7 @@ public class RecipeDetailActivity extends AppCompatActivity {
                     String tips = dataSnapshot.child("RecipeTips").getValue(String.class);
 
                     // Set retrieved data to views
-                    Glide.with(RecipeDetailActivity.this).load(image).into(recipeImageView);
+                    Glide.with(RecipeDetailActivity.this).load(image).into(binding.recipeImage);
                     recipeTitleTextView.setText(title);
                     recipeCategoryTextView.setText(category);
                     recipeServingsTextView.setText(servings + " Servings");
@@ -123,7 +117,7 @@ public class RecipeDetailActivity extends AppCompatActivity {
         loadComments();
 
         // Set click listener on the favorite button
-        favoriteBtn.setOnClickListener(new View.OnClickListener() {
+        binding.favoriteBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (isFavorite) {
@@ -166,7 +160,7 @@ public class RecipeDetailActivity extends AppCompatActivity {
 
                     @Override
                     public void onCancelled(@NonNull DatabaseError error) {
-
+                        Toast.makeText(RecipeDetailActivity.this, "Failed to load comments", Toast.LENGTH_SHORT).show();
                     }
                 });
     }
@@ -236,12 +230,16 @@ public class RecipeDetailActivity extends AppCompatActivity {
                     @Override
                     public void onFailure(@NonNull Exception e) {
                         progressDialog.dismiss();
-                        Toast.makeText(RecipeDetailActivity.this, "Failed to sending a comment", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(RecipeDetailActivity.this, "Failed to send comment", Toast.LENGTH_SHORT).show();
                     }
                 });
     }
 
     private void checkIfFavorite() {
+        if (firebaseAuth.getCurrentUser() == null) {
+            return; // Exit method if user is not logged in
+        }
+
         String uid = firebaseAuth.getCurrentUser().getUid();
         DatabaseReference favoriteReference = FirebaseDatabase.getInstance().getReference("Users").child(uid).child("Favorites");
 
@@ -250,9 +248,9 @@ public class RecipeDetailActivity extends AppCompatActivity {
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 isFavorite = snapshot.exists();
                 if (isFavorite) {
-                    favoriteBtn.setImageResource(R.drawable.ic_bookmark_black);
+                    binding.favoriteBtn.setImageResource(R.drawable.ic_bookmark_black);
                 } else {
-                    favoriteBtn.setImageResource(R.drawable.ic_bookmark_border);
+                    binding.favoriteBtn.setImageResource(R.drawable.ic_bookmark_border);
                 }
             }
 
@@ -264,6 +262,12 @@ public class RecipeDetailActivity extends AppCompatActivity {
     }
 
     private void addFavorite() {
+
+        if (firebaseAuth.getCurrentUser() == null) {
+            Toast.makeText(this, "User not logged in", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
         String uid = firebaseAuth.getCurrentUser().getUid();
         DatabaseReference favoriteReference = FirebaseDatabase.getInstance().getReference("Users").child(uid).child("Favorites");
 
@@ -274,7 +278,7 @@ public class RecipeDetailActivity extends AppCompatActivity {
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void aVoid) {
-                        favoriteBtn.setImageResource(R.drawable.ic_bookmark_black);
+                        binding.favoriteBtn.setImageResource(R.drawable.ic_bookmark_black);
                         Toast.makeText(RecipeDetailActivity.this, "Added to favorites", Toast.LENGTH_SHORT).show();
                         isFavorite = true;
                     }
@@ -282,12 +286,18 @@ public class RecipeDetailActivity extends AppCompatActivity {
                 .addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
+                        progressDialog.dismiss();
                         Toast.makeText(RecipeDetailActivity.this, "Failed to add to favorites", Toast.LENGTH_SHORT).show();
                     }
                 });
     }
 
     private void removeFavorite() {
+        if (firebaseAuth.getCurrentUser() == null) {
+            Toast.makeText(this, "User not logged in", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
         String uid = firebaseAuth.getCurrentUser().getUid();
         DatabaseReference favoriteReference = FirebaseDatabase.getInstance().getReference("Users").child(uid).child("Favorites");
 
@@ -295,7 +305,7 @@ public class RecipeDetailActivity extends AppCompatActivity {
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void aVoid) {
-                        favoriteBtn.setImageResource(R.drawable.ic_bookmark_border);
+                        binding.favoriteBtn.setImageResource(R.drawable.ic_bookmark_border);
                         Toast.makeText(RecipeDetailActivity.this, "Removed from favorites", Toast.LENGTH_SHORT).show();
                         isFavorite = false;
                     }

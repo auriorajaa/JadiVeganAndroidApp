@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.annotation.NonNull;
@@ -11,10 +12,14 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.example.jadiveganapp.adapter.FavoriteRecipeAdapter;
 import com.example.jadiveganapp.databinding.ActivityDashboardUserBinding;
 import com.example.jadiveganapp.databinding.ActivityProfileBinding;
+import com.example.jadiveganapp.model.FavoriteRecipeModel;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
@@ -25,7 +30,9 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.Date;
 import java.util.Locale;
 
@@ -33,6 +40,10 @@ public class ProfileActivity extends AppCompatActivity {
 
     // view binding
     private ActivityProfileBinding binding;
+
+    private RecyclerView recipeRv;
+    private ArrayList<FavoriteRecipeModel> favoriteRecipeList;
+    private FavoriteRecipeAdapter favoriteRecipeAdapter;
 
     // firebase auth
     private FirebaseAuth firebaseAuth;
@@ -45,9 +56,17 @@ public class ProfileActivity extends AppCompatActivity {
         binding = ActivityProfileBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
+        recipeRv = findViewById(R.id.recipeRv);
+        recipeRv.setLayoutManager(new LinearLayoutManager(this));
+        favoriteRecipeList = new ArrayList<>();
+        favoriteRecipeAdapter = new FavoriteRecipeAdapter(this, favoriteRecipeList);
+        recipeRv.setAdapter(favoriteRecipeAdapter);
+
         // setup firebase auth
         firebaseAuth = FirebaseAuth.getInstance();
         loadUserInfo();
+
+        loadFavoriteRecipes();
 
         // handle click edit profile
         binding.editProfileButton.setOnClickListener(new View.OnClickListener() {
@@ -81,6 +100,52 @@ public class ProfileActivity extends AppCompatActivity {
         });
     }
 
+    private void loadFavoriteRecipes() {
+        String uid = firebaseAuth.getCurrentUser().getUid();
+        DatabaseReference userFavoritesRef = FirebaseDatabase.getInstance().getReference("Users").child(uid).child("Favorites");
+
+        userFavoritesRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                favoriteRecipeList.clear();
+                for (DataSnapshot ds : snapshot.getChildren()) {
+                    String recipeUid = ds.getKey();
+                    DatabaseReference recipeRef = FirebaseDatabase.getInstance().getReference("Recipes").child(recipeUid);
+                    recipeRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot recipeSnapshot) {
+                            if (recipeSnapshot.exists()) {
+                                String title = recipeSnapshot.child("RecipeTitle").getValue(String.class);
+                                String image = recipeSnapshot.child("RecipeImage").getValue(String.class);
+                                String category = recipeSnapshot.child("RecipeCategory").getValue(String.class);
+                                String servings = recipeSnapshot.child("RecipeServings").getValue(String.class);
+
+                                FavoriteRecipeModel favoriteRecipe = new FavoriteRecipeModel(recipeUid, title, image, category, servings);
+                                favoriteRecipeList.add(favoriteRecipe);
+
+                                Collections.reverse(favoriteRecipeList);
+
+                                favoriteRecipeAdapter.notifyDataSetChanged();
+                            } else {
+                                Toast.makeText(ProfileActivity.this, "Recipe not found", Toast.LENGTH_SHORT).show();
+                            }
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError error) {
+                            Toast.makeText(ProfileActivity.this, "Failed to load recipe details", Toast.LENGTH_SHORT).show();
+                        }
+                    });
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                Toast.makeText(ProfileActivity.this, "Failed to load favorites", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
     public static final String formatTimestamp(long timestamp) {
         Calendar calendar = Calendar.getInstance(Locale.ENGLISH);
         calendar.setTimeInMillis(timestamp);
@@ -101,7 +166,6 @@ public class ProfileActivity extends AppCompatActivity {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
                         // get all info of user from snapshot
-
                         String email = "" + snapshot.child("email").getValue();
                         String name = "" + snapshot.child("name").getValue();
                         String profileImage = "" + snapshot.child("profileImage").getValue();
@@ -116,17 +180,20 @@ public class ProfileActivity extends AppCompatActivity {
                         binding.userName.setText(name);
                         binding.userCreatedAt.setText("Created at: " + formattedDate);
 
-                        // set image
-                        Glide.with(ProfileActivity.this)
-                                .load(profileImage)
-                                .placeholder(R.drawable.user)
-                                .into(binding.profilePicture);
+                        // set image only if activity is not destroyed
+                        if (!isDestroyed()) {
+                            Glide.with(ProfileActivity.this)
+                                    .load(profileImage)
+                                    .placeholder(R.drawable.user)
+                                    .into(binding.profilePicture);
+                        }
                     }
 
                     @Override
                     public void onCancelled(@NonNull DatabaseError error) {
-
+                        Log.e(TAG, "Failed to load user info", error.toException());
                     }
                 });
     }
+
 }

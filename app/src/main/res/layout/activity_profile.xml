@@ -8,85 +8,125 @@
     android:background="@color/new_white"
     tools:context=".ProfileActivity">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Profile"
-        android:textSize="24sp"
-        android:textColor="@color/black"
-        android:fontFamily="@font/poppinsbold"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="32dp" />
-
-    <!-- Profil User -->
-    <LinearLayout
-        android:id="@+id/profileSection"
+    <ScrollView
+        android:id="@+id/scrollView"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:padding="16dp"
+        android:layout_height="0dp"
+        android:layout_above="@+id/bottomNavigationView"
         android:layout_alignParentTop="true"
-        android:layout_marginTop="90dp">
+        android:fillViewport="true">
 
-        <!-- Gambar Profil -->
-        <com.makeramen.roundedimageview.RoundedImageView
-            android:id="@+id/profilePicture"
-            android:layout_width="78dp"
-            android:layout_height="78dp"
-            app:riv_corner_radius="8dp"
-            android:src="@mipmap/ic_launcher"
-            android:scaleType="centerCrop"
-            android:layout_marginEnd="16dp" />
-
-        <!-- Detail User -->
-        <LinearLayout
-            android:layout_width="0dp"
+        <RelativeLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:orientation="vertical"
-            android:gravity="center_vertical">
+            android:padding="16dp">
 
-            <!-- Nama User -->
             <TextView
-                android:id="@+id/userName"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="User Name"
-                android:textSize="18sp"
-                android:fontFamily="@font/poppinssemibold"
-                android:textColor="@color/black" />
+                android:text="Profile"
+                android:textSize="24sp"
+                android:textColor="@color/black"
+                android:fontFamily="@font/poppinsbold"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="32dp" />
 
-            <!-- Email User -->
+            <!-- Profil User -->
+            <LinearLayout
+                android:id="@+id/profileSection"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:padding="16dp"
+                android:layout_marginTop="90dp">
+
+                <!-- Gambar Profil -->
+                <com.makeramen.roundedimageview.RoundedImageView
+                    android:id="@+id/profilePicture"
+                    android:layout_width="78dp"
+                    android:layout_height="78dp"
+                    app:riv_corner_radius="8dp"
+                    android:src="@mipmap/ic_launcher"
+                    android:scaleType="centerCrop"
+                    android:layout_marginEnd="16dp" />
+
+                <!-- Detail User -->
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:orientation="vertical"
+                    android:gravity="center_vertical">
+
+                    <!-- Nama User -->
+                    <TextView
+                        android:id="@+id/userName"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="User Name"
+                        android:textSize="18sp"
+                        android:fontFamily="@font/poppinssemibold"
+                        android:textColor="@color/black" />
+
+                    <!-- Email User -->
+                    <TextView
+                        android:id="@+id/userEmail"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="user@example.com"
+                        android:textSize="12sp"
+                        android:fontFamily="@font/poppinsregular"
+                        android:textColor="@color/black" />
+
+                    <!-- Created At -->
+                    <TextView
+                        android:id="@+id/userCreatedAt"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Created at: tanggal"
+                        android:textSize="10sp"
+                        android:fontFamily="@font/poppinslight"
+                        android:textColor="@color/black" />
+
+                </LinearLayout>
+
+                <!-- Ikon Pensil -->
+                <ImageButton
+                    android:id="@+id/editProfileButton"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:src="@drawable/ic_edit_green"
+                    android:background="?attr/selectableItemBackgroundBorderless" />
+
+            </LinearLayout>
+
             <TextView
-                android:id="@+id/userEmail"
+                android:id="@+id/your_bookmark"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="user@example.com"
-                android:textSize="14sp"
-                android:fontFamily="@font/poppinsregular"
-                android:textColor="@color/black" />
+                android:layout_below="@id/profileSection"
+                android:text="Your Bookmark"
+                android:layout_marginStart="16dp"
+                android:fontFamily="@font/poppinsbold"
+                android:textColor="@color/black"
+                android:layout_marginTop="16dp"
+                android:textSize="24dp"/>
 
-            <!-- Created At -->
-            <TextView
-                android:id="@+id/userCreatedAt"
-                android:layout_width="wrap_content"
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recipeRv"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Created at: tanggal"
-                android:textSize="10sp"
-                android:fontFamily="@font/poppinslight"
-                android:textColor="@color/black" />
+                android:layout_below="@id/your_bookmark"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginEnd="16dp"
+                android:background="@color/new_white"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                tools:listitem="@layout/row_recipe_favorite"/>
 
-        </LinearLayout>
+        </RelativeLayout>
 
-        <!-- Ikon Pensil -->
-        <ImageButton
-            android:id="@+id/editProfileButton"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:src="@drawable/ic_edit_green"
-            android:background="?attr/selectableItemBackgroundBorderless" />
-
-    </LinearLayout>
+    </ScrollView>
 
     <!-- Bottom Navigation View -->
     <com.google.android.material.bottomnavigation.BottomNavigationView
