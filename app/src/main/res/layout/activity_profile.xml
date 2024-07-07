@@ -105,7 +105,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/profileSection"
-                android:text="Your Bookmark"
+                android:text="Your Favorite"
                 android:layout_marginStart="16dp"
                 android:fontFamily="@font/poppinsbold"
                 android:textColor="@color/black"

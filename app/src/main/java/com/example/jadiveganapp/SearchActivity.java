@@ -127,11 +127,11 @@ public class SearchActivity extends AppCompatActivity {
     }
 
     private void searchRecipes(String query) {
-        Query firebaseSearchQuery = databaseReference.orderByChild("RecipeTitle")
-                .startAt(query)
-                .endAt(query + "\uf8ff");
+        // Convert query to lowercase
+        String lowerCaseQuery = query.toLowerCase();
 
-        firebaseSearchQuery.addValueEventListener(new ValueEventListener() {
+        // Get a reference to the database and read all recipes
+        databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 searchResults.clear();
@@ -142,8 +142,10 @@ public class SearchActivity extends AppCompatActivity {
                     String servings = snapshot.child("RecipeServings").getValue(String.class);
                     String image = snapshot.child("RecipeImage").getValue(String.class);
 
-                    RandomModel recipe = new RandomModel(uid, title, category, servings, image);
-                    searchResults.add(recipe);
+                    if (title != null && title.toLowerCase().contains(lowerCaseQuery)) {
+                        RandomModel recipe = new RandomModel(uid, title, category, servings, image);
+                        searchResults.add(recipe);
+                    }
                 }
                 searchAdapter.updateList(searchResults);
             }
@@ -154,6 +156,7 @@ public class SearchActivity extends AppCompatActivity {
             }
         });
     }
+
 
     // Method to handle back button click
     public void onBackButtonClick(View view) {

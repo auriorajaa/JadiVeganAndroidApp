@@ -43,6 +43,7 @@ public class RecentAdapter extends RecyclerView.Adapter<RecentAdapter.ViewHolder
         holder.RecipeTitle.setText(recentModel.getRecipeTitle());
         holder.RecipeCategory.setText(recentModel.getRecipeCategory());
         holder.RecipeServings.setText(recentModel.getRecipeServings() + " Servings");
+//        holder.UID.setText(recentModel.getUID());
 
         // Set click listener
         holder.itemView.setOnClickListener(v -> {
